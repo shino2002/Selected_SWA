@@ -1,0 +1,37 @@
+# TopK選択SWA設定
+experiment:
+  name: "topk_swa"
+  output_dir: "out/topk_swa"
+  csv_name: "topk_swa_log.csv"
+
+training:
+  epochs: 200
+  learning_rate: 0.1
+  weight_decay: 0.0005
+  momentum: 0.9
+  optimizer: "Adam"
+
+swa:
+  method: "threshold_swa"
+  start_ratio: 0.75
+  interval: 1
+  swa_lr: 0.01
+
+threshold_swa:
+  threshold: "0.0"
+  mode: "gt"
+  selection_type: "topk"  # 上位K%のパラメータを選択
+  update_type: "masking"
+  topk_ratio: 0.2  # 上位20%のパラメータを選択
+
+dataset:
+  batch_size: 64
+  num_workers: 2
+
+logging:
+  log_dir: "./log"
+
+debug:
+  enabled: true
+  print_mask_ratios: true
+  print_weight_stats: false

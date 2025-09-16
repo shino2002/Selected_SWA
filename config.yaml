@@ -1,0 +1,76 @@
+# 実験設定ファイル
+# このファイルを編集してパラメータを調整できます
+
+# 基本設定（ExperimentManagerで自動生成されるフォルダに保存されます）
+experiment:
+  name: "cifar10_experiment"   # 実験の表示名（フォルダ名の一部に使用）
+  output_dir: "out"            # すべての結果ルート
+  csv_name: "log.csv"          # ログCSVのファイル名（logs/配下に保存）
+  device: "auto"               # "auto", "cuda", "cpu"
+
+# データセット設定
+dataset:
+  name: "CIFAR10"
+  data_dir: "../data"
+  batch_size: 64               # 学習/評価ともに使用
+  num_workers: 2
+  train_transform:
+    random_crop: 32
+    padding: 4
+    random_horizontal_flip: true
+    normalize:
+      mean: [0.4914, 0.4822, 0.4465]
+      std: [0.2470, 0.2435, 0.2616]
+  test_transform:
+    normalize:
+      mean: [0.4914, 0.4822, 0.4465]
+      std: [0.2470, 0.2435, 0.2616]
+
+# モデル設定
+model:
+  name: "ResNet18"
+  num_classes: 10
+
+# 訓練設定
+training:
+  epochs: 100                # 学習エポック数
+  learning_rate: 0.1         # 学習率（数値）
+  weight_decay: 0.0005       # Weight Decay（数値）
+  momentum: 0.9              # SGD使用時のみ有効
+  optimizer: "Adam"          # "Adam" または "SGD"
+  scheduler:
+    type: "StepLR"          # 現在はStepLRのみ対応
+    step_size_ratio: 0.4     # エポック数に対する比率（数値）
+    gamma: 0.5               # 減衰率
+
+# SWA設定
+swa:
+  method: "normal"          # "normal", "swa", "threshold_swa"
+  start_ratio: 0.75          # 何割のエポックからSWAを開始するか（数値）
+  interval: 1                # 何エポックごとに更新するか（数値）
+  swa_lr: 0.01               # SWA用の学習率（数値）
+
+# しきい値SWA設定（methodが"threshold_swa"の場合のみ有効）
+threshold_swa:
+  threshold: "0.0"          # 数値 or "mean+1std"/"mean-1std"/"median"/"percentile90" 等
+  mode: "gt"                # "gt" or "lt"
+  selection_type: "threshold"  # "threshold", "topk", "bottomk", "none"
+  update_type: "masking"    # "masking" or "weighted"
+  topk_ratio: 0.1            # topk/bottomk時の比率（0.0〜1.0）
+
+# ログ設定
+logging:
+  # ExperimentManagerにより logs/ 配下に自動保存されます（log_dirは互換用）
+  log_dir: "./log"
+  param_histogram:
+    enabled: false
+    output_dir: "param_hist"
+    every_n_epoch: 50
+    selected_layers: null  # 例: ["layer1.0.conv1.weight"]
+
+# デバッグ設定
+debug:
+  enabled: true
+  print_mask_ratios: true
+  print_weight_stats: true
+

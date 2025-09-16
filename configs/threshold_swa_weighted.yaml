@@ -1,0 +1,37 @@
+# しきい値SWA（重み付き）設定
+experiment:
+  name: "threshold_swa_weighted"
+  output_dir: "out/threshold_swa_weighted"
+  csv_name: "threshold_swa_weighted_log.csv"
+
+training:
+  epochs: 200
+  learning_rate: 0.1
+  weight_decay: 0.0005
+  momentum: 0.9
+  optimizer: "Adam"
+
+swa:
+  method: "threshold_swa"
+  start_ratio: 0.75
+  interval: 1
+  swa_lr: 0.01
+
+threshold_swa:
+  threshold: "percentile90"
+  mode: "gt"  # しきい値より大きいパラメータを選択
+  selection_type: "threshold"
+  update_type: "weighted"  # 重み付き更新
+  topk_ratio: 0.1
+
+dataset:
+  batch_size: 64
+  num_workers: 2
+
+logging:
+  log_dir: "./log"
+
+debug:
+  enabled: true
+  print_mask_ratios: false
+  print_weight_stats: true

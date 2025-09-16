@@ -1,0 +1,22 @@
+# 通常の訓練設定
+experiment:
+  name: "normal_training"
+  output_dir: "out/normal"
+  csv_name: "normal_log.csv"
+
+training:
+  epochs: 100
+  learning_rate: 0.1
+  weight_decay: 0.0005
+  momentum: 0.9
+  optimizer: "Adam"
+
+swa:
+  method: "normal"
+
+dataset:
+  batch_size: 64
+  num_workers: 2
+
+logging:
+  log_dir: "./log"
